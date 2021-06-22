@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto')
+const { validationResult } = require('express-validator/check')
 
 const User = require('../models/user');
 const nodemailer = require('nodemailer')
@@ -86,14 +87,24 @@ exports.postLogin = (req, res, next) => {
 exports.postSignup = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
-  const confirmPassword = req.body.confirmPassword;
-  User.findOne({ email: email })
-    .then(userDoc => {
-      if (userDoc) {
-        req.flash('error','Email already in Use!')
-        return res.redirect('/signup');
-      }
-      return bcrypt
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    console.log(errors.array())
+    //if there are errors, send 422 status and re-render the page again
+    return res.status(422).render('auth/signup', {
+      path: '/signup',
+      pageTitle: 'Signup',
+      errorMessage: errors.array()[0].msg
+      
+    });
+  }
+  // User.findOne({ email: email })
+  //   .then(userDoc => {
+  //     if (userDoc) {
+  //       req.flash('error','Email already in Use!')
+  //       return res.redirect('/signup');
+  //     }
+      bcrypt
         .hash(password, 12)
         .then(hashedPassword => {
           const user = new User({
@@ -116,7 +127,7 @@ exports.postSignup = (req, res, next) => {
         }).catch(err => {
           console.log(err)
         })
-    })
+    
     .catch(err => {
       console.log(err);
     });
