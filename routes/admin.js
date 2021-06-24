@@ -37,15 +37,16 @@ router.get('/edit-product/:productId', isAuth, adminController.getEditProduct);
 router.post('/edit-product',
 [
     body('title')
-        .isAlphanumeric()
+        .isString()
         .isLength({ min: 3 })
         .trim(),
     body('imageUrl')
-        .isURL(),
+        .isURL().withMessage('Image must be a link...'),
     body('price')
-        .isFloat(),
+        .isFloat().withMessage('Price can only be a number...'),
     body('description')
         .isLength({ min: 5, max: 400 })
+        .withMessage('Image must be a link...')
         
 ],
     isAuth, adminController.postEditProduct);
