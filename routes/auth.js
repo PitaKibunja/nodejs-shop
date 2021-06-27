@@ -13,9 +13,9 @@ router.get('/signup', authController.getSignup);
 router.post('/login', [
     body('email')
         .isEmail()
-        .withMessage('Please enter a valid email address..')
+        .withMessage('Invalid Credentials..')
         .normalizeEmail(),
-    body('password', 'Password has to be valid')
+    body('password', 'Invalid Credentials')
         .isLength({ min: 5 })
         .isAlphanumeric()
         .trim()
