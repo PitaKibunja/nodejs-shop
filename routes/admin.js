@@ -40,8 +40,6 @@ router.post('/edit-product',
         .isString()
         .isLength({ min: 3 })
         .trim(),
-    body('imageUrl')
-        .isURL().withMessage('Image must be a link...'),
     body('price')
         .isFloat().withMessage('Price can only be a number...'),
     body('description')
