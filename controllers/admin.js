@@ -195,15 +195,16 @@ exports.postDeleteProduct = (req, res, next) => {
       return next(new Error('Product Not Found'))
     }
     fileHelper.deleteFile(product.imageUrl)
-  }).catch(err=>next(err))
-  Product.deleteOne({ _id: prodId, userId: req.user._id })
-    .then(() => {
-      console.log('DESTROYED PRODUCT');
-      res.redirect('/admin/products');
-    })
-    .catch(err => {
-      const error = new Error(err)
-      error.httpStatusCode = 500
-      return next(error)
-    });
+    return Product.deleteOne({ _id: prodId, userId: req.user._id })
+  }).then(() => {
+    console.log('DESTROYED PRODUCT');
+    res.redirect('/admin/products');
+  })
+  .catch(err => {
+    const error = new Error(err)
+    error.httpStatusCode = 500
+    return next(error)
+  });
+  
+   
 };
