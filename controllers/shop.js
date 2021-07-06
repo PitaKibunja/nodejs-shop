@@ -160,6 +160,7 @@ exports.getCheckout = (req, res, next) => {
             quantity:p.quantity
           }
         }),
+        mode:'payment',
         success_url: req.protocol + '://' + req.get('host')+'/checkout/success', //=>http://localhost:3000
         cancel_url:req.protocol + '://' + req.get('host')+'/checkout/cancel'
       })
@@ -176,6 +177,7 @@ exports.getCheckout = (req, res, next) => {
   })
   .catch(err => {
     const error = new Error(err);
+    console.log(error)
     error.httpStatusCode = 500;
     return next(error);
   });
